@@ -1,4 +1,5 @@
 pandas
 rich
-psutil
+psutil>=5.0.0
 pytest
+subprocess

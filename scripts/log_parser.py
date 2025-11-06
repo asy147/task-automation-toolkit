@@ -1,9 +1,10 @@
-'''
+"""
 1 Parse server/log files for errors or patterns.
 2 Generate a summary report.
 
 Optional: highlight critical logs with colors (rich library).
-'''
+"""
+
 import os.path
 import json
 
@@ -11,8 +12,8 @@ print("\n" * 2)
 
 # Setting up so py reads from .log file in the specified folder
 # dynamic
-#folder_path = input("Enter the folder path containing the .log file: ").strip()
-#log_filename = input("Enter the .log filename (e.g., server.log): ").strip()
+# folder_path = input("Enter the folder path containing the .log file: ").strip()
+# log_filename = input("Enter the .log filename (e.g., server.log): ").strip()
 # static
 folder_path = "tests/ttest-files/"
 log_filename = "fake-data.log"
@@ -26,7 +27,7 @@ if not os.path.isfile(log_path):
     print(f"Log file not found: {log_path}")
     exit(1)
 
-with open(log_path, 'r') as log_file:
+with open(log_path, "r") as log_file:
     log_lines = log_file.readlines()
     for line in log_lines:
         line_cnt = line_cnt + 1
@@ -37,8 +38,8 @@ with open(log_path, 'r') as log_file:
             error_string = " ".join(line.split()[5:])
             unique_errors.add(error_string)
         # Save last log time (assume first two columns are date and time)
-        last_log_time = f"{parts[0]} {parts[1].split(',')[0]}" 
-                
+        last_log_time = f"{parts[0]} {parts[1].split(',')[0]}"
+
 
 # Output Messsage
 print("\nLog Summary\n-----------")
@@ -48,20 +49,21 @@ print("WARNING:", counts["WARNING"])
 print("ERROR: ", counts["ERROR"])
 
 print("\nUnique Errors:")
-for ele in unique_errors: print("-" , ele)
+for ele in unique_errors:
+    print("-", ele)
 
-print("\nLast log entry:" , line.split()[0], line.split()[1].split(",")[0])
+print("\nLast log entry:", line.split()[0], line.split()[1].split(",")[0])
 
 json_output = {
     "total_lines": line_cnt,
     "counts": counts,
     "unique_errors": sorted(list(unique_errors)),
-    "last_log_time": last_log_time
+    "last_log_time": last_log_time,
 }
 
 print(json.dumps(json_output, indent=2))
 
-'''
+"""
 Potential Bottlenecks
 
 1 Disk I/O
@@ -83,7 +85,7 @@ Solution: limit stored messages, or count unique IDs/hashes instead.
 5 Single-threaded execution
 Python will process line by line on one CPU core.
 Solution: parallelize (e.g., split file by chunks, multiprocessing).
-'''
+"""
 
 # How SRE teams scale log parsing in production:
 #
